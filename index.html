@@ -249,9 +249,15 @@ filter: none !important;
             animation: slowBeat 7.1s infinite ease-in-out;
         }
         .status-indicator.good {
-            background: var(--status-green);
-            box-shadow: 0 0 8px var(--status-green);
-        }
+
+    background:#00ff9d;
+
+    box-shadow:
+    0 0 5px #00ff9d,
+    0 0 15px #00ff9d,
+    0 0 30px #00ff9d;
+
+}
         .status-indicator.medium {
             background: var(--status-yellow);
             box-shadow: 0 0 8px var(--status-yellow);
@@ -273,6 +279,57 @@ filter: none !important;
             flex-wrap: nowrap;
             gap: 4px;
         }
+        .status-label {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.status-value {
+    color:#f8fafc;
+    font-weight:600;
+    letter-spacing:0.5px;
+
+    text-shadow:
+        0 0 2px #ffffff,
+        0 0 6px rgba(255,255,255,.35);
+
+    font-family:
+        "Courier New",
+        monospace;
+}
+         .status-value {
+    color: #ffffff;
+    font-weight: 500;
+    text-shadow: 0 0 2px rgba(255,255,255,0.5);
+}
+
+
+.red-label {
+    color: #ff1744;
+    text-shadow:
+        0 0 4px #ff1744,
+        0 0 10px #ff1744,
+        0 0 20px rgba(255,23,68,0.8);
+    animation: cyberRedPulse 1.8s infinite alternate;
+}
+
+
+@keyframes cyberRedPulse {
+
+    0% {
+        text-shadow:
+        0 0 3px #ff1744,
+        0 0 8px #ff1744;
+    }
+
+    100% {
+        text-shadow:
+        0 0 8px #ff1744,
+        0 0 22px #ff1744,
+        0 0 35px rgba(255,23,68,.9);
+    }
+
+}
         .status-good { color: var(--status-green); font-weight: 500; }
         .status-wait { color: var(--status-yellow); }
         .status-high { color: var(--status-red); 
@@ -355,8 +412,9 @@ filter: none !important;
     margin-bottom:4px;
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:center;
     gap:6px;
+    text-align:center;
 }
 
 .clear-log-btn{
@@ -1437,6 +1495,11 @@ filter: none !important;
         font-size: .45rem;
         line-height: 1.15;
     }
+.system-status-panel {
+    position:relative;
+    overflow:hidden;
+}
+
 }
     </style>
 </head>
@@ -1489,9 +1552,33 @@ filter: none !important;
                     <strong>𝐒𝐄𝐑𝐕𝐄𝐑 𝐒𝐓𝐀𝐓𝐔𝐒 </strong> 
                     <span class="status-indicator good" id="latencyDot"></span>
                 </div>
-                 <div class="status-row">𝐕𝐢𝐬𝐢𝐭𝐨𝐫𝐬:<span id="visitorCount" class="visitor-count">Loading...</span></div>
-                <div class="status-row">𝐘𝐨𝐮𝐫𝐈𝐏: <span id="userIP" class="status-high">Loading...</span></div>
-                <div class="status-row">𝐒𝐞𝐫𝐯𝐞𝐫𝐔𝐩𝐭𝐢𝐦𝐞: <span id="uptime" class="status-wait">00:00:00</span></div>
+                 <div class="status-row">
+    <span class="status-label">𝐕𝐢𝐬𝐢𝐭𝐨𝐫𝐬:</span>
+    <span id="visitorCount" class="status-value">Loading...</span>
+</div>
+
+<div class="status-row">
+    <span class="status-label">𝐘𝐨𝐮𝐫<span class="red-label">𝐈𝐏:</span></span>
+    <span id="userIP" class="status-value">Loading...</span>
+</div>
+
+<div class="status-row">
+    <span class="status-label">𝐘𝐨𝐮𝐫<span class="red-label">𝐂𝐨𝐮𝐧𝐭𝐫𝐲:</span></span>
+    <span id="visitorCountry" class="status-value">Loading...</span>
+</div>
+
+<div class="status-row">
+    <span class="status-label">𝐘𝐨𝐮𝐫<span class="red-label">𝐂𝐢𝐭𝐲:</span></span>
+    <span id="visitorCity" class="status-value">Loading...</span>
+</div>
+
+<div class="status-row">
+    <span class="status-label">𝐘𝐨𝐮𝐫<span class="red-label">𝐈𝐒𝐏:</span></span>
+    <span id="visitorISP" class="status-value">Loading...</span>
+</div>
+
+<div class="status-row">𝐒𝐞𝐫𝐯𝐞𝐫𝐔𝐩𝐭𝐢𝐦𝐞: <span id="uptime" class="status-wait">00:00:00</span>
+</div>
                <div class="graph-container" id="activityGraph">
     <div class="graph-bar" data-index="0"></div>
     <div class="graph-bar" data-index="1"></div>
@@ -1593,6 +1680,9 @@ filter: none !important;
         const page3 = document.getElementById('page3');
         const elVisitor = document.getElementById('visitorCount');
         const elIP = document.getElementById('userIP');
+        const elCountry = document.getElementById('visitorCountry');
+const elCity = document.getElementById('visitorCity');
+const elISP = document.getElementById('visitorISP');
         const elUptime = document.getElementById('uptime');
         const elLog = document.getElementById('systemLog');
         const clearLogBtn = document.getElementById('clearLogBtn');
@@ -2042,29 +2132,98 @@ setTimeout(() => {
         }
 
         async function loadAllRealData() {
-            updateActivityGraph();
-            updateLatencyStatus();
-            updateConfigOutput();
-            try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                elIP.textContent = ipData.ip;
-                elIP.classList.remove('status-wait');
-                elIP.classList.add('status-high')
-                addLog(`Public IP detected: ${ipData.ip}`);
-            } catch (err) {
-                elIP.textContent = 'Unavailable';
-                addLog('Could not fetch public IP');
-            }
+    updateActivityGraph();
+    updateLatencyStatus();
+    updateConfigOutput();
 
-            try {
-                const visitorRes = await fetch('https://api.countapi.xyz/hit/cxlvin-server/visits');
-                const visitorData = await visitorRes.json();
-                elVisitor.textContent = visitorData.value;
-                addLog(`Total visitors: ${visitorData.value}`);
-            } catch (err) {
-                elVisitor.textContent = '1';
-                addLog('Visitor count offline');
+    try {
+        const geoRes = await fetch(
+            'https://ipwho.is/?t=' + Date.now(),
+            {
+                cache: 'no-store'
+            }
+        );
+
+        if (!geoRes.ok) {
+            throw new Error('Geolocation request failed');
+        }
+
+        const geoData = await geoRes.json();
+
+        if (!geoData.success) {
+            throw new Error(
+                geoData.message || 'Geolocation lookup failed'
+            );
+        }
+
+        if (geoData.ip) {
+            elIP.textContent = geoData.ip;
+            elIP.classList.add('status-value');
+
+            addLog(`IP detected: ${geoData.ip}`);
+        } else {
+            elIP.textContent = 'Unavailable';
+        }
+
+        elCountry.textContent =
+            geoData.country || 'Unavailable';
+
+        elCity.textContent =
+            geoData.city || 'Unavailable';
+
+        elISP.textContent =
+            geoData.connection?.isp || 'Unavailable';
+
+       [elCountry, elCity, elISP].forEach(element => {
+    element.classList.add('status-value');
+});
+
+        addLog(
+            `Visitor location detected: ` +
+            `${geoData.city || 'Unknown'}, ` +
+            `${geoData.country || 'Unknown'}`
+        );
+
+        addLog(
+            `Visitor ISP detected: ` +
+            `${geoData.connection?.isp || 'Unknown'}`
+        );
+
+    } catch (err) {
+
+        elIP.textContent = 'Unavailable';
+        elCountry.textContent = 'Unavailable';
+        elCity.textContent = 'Unavailable';
+        elISP.textContent = 'Unavailable';
+
+        addLog('Could not retrieve visitor geolocation');
+    }
+
+
+try {
+                const res = await fetch(BACKEND_ENDPOINT);
+                if (!res.ok) throw new Error('Backend offline');
+                const data = await res.json();
+                elVisitor.textContent = data.visitors.toLocaleString();
+                elVisitor.classList.remove('status-wait');
+                elVisitor.classList.add('status-good');
+                updateActivityGraph(data.visitors);
+                serverStartTime = data.server_start || getSavedStartTime();
+                addLog('Backend connection: SUCCESS');
+            } catch {
+                let localVisitors = Number(localStorage.getItem('real_visitors') || 0);
+                const lastVisit = Number(localStorage.getItem('last_visit_ts') || 0);
+                if (Date.now() - lastVisit > 300000) {
+                    localVisitors += 1;
+                    localStorage.setItem('real_visitors', localVisitors);
+                    localStorage.setItem('last_visit_ts', Date.now());
+                }
+                elVisitor.textContent = localVisitors.toLocaleString();
+                updateActivityGraph(localVisitors);
+                serverStartTime = getSavedStartTime();
+                elVisitor.classList.remove('status-wait');
+                elVisitor.classList.add('status-good');
+                addLog('Backend connection: OFFLINE - using local stats');
             }
         }
     </script>
