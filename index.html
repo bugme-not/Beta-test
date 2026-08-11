@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>𝐂𝐱𝐥𝐯𝐢𝐧 𝟏𝟐 𝐢𝐧 𝟏 𝐗𝐫𝐚𝐲 𝐌𝐮𝐥𝐭𝐢 𝐩𝐫𝐨𝐭𝐨𝐜𝐨𝐥 𝐒𝐞𝐫𝐯𝐞𝐫</title>
+    <style>
+        :root {
+            --white: #ffffff;
+            --glow: rgba(100, 200, 255, 0.6);
+            --stroke-radiant: rgba(0, 0, 0, 0.9);
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 0 25px rgba(100, 200, 255, 0.25);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            --bg-base: #0b0f14;
+            --bg-radiant: radial-gradient(circle at top left, #2a0845 0%, #0a0118 40%, #000000 100%);
+            --graph-cyan: #00f5ff;
+            --status-green: #10b981;
+            --status-green-soft: rgba(16, 185, 129, 0.08);
+            --status-green-border: rgba(16, 185, 129, 0.25);
+            --status-text: #d1fae5;
+            --status-yellow: #eab308;
+            --status-red: #ef4444;
+            --log-bg: rgba(255, 255, 255, 0.08);
+            --log-border: rgba(255, 255, 255, 0.15);
+            --log-text: #c0e7ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        *:not(video):not(audio):not(svg):not(path):not(.loading-text):not(.center-loading-text):not(.fetch-loading-text) {
+            text-shadow:
+                0 0 0.5px var(--stroke-radiant),
+                0 0 1px var(--stroke-radiant);
+        }
+
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--white);
+            background-color: var(--bg-base);
+            touch-action: none;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .page {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: var(--bg-base);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        #page1 {
+            background: radial-gradient(circle at top left, #2a0845 0%, #0a0118 40%, #000000 100%);
+        }
+
+        .container{
+            width:90%;
+            max-width:320px;
+        }
+
+        .loading-text{
+            position:relative;
+            font-size:18px;
+            font-weight:bold;
+            color:#7f8c99;
+            overflow:hidden;
+            white-space:nowrap;
+            text-shadow:none !important;
+            -webkit-text-stroke:0 !important;
+            filter:none !important;
+        }
+
+        .success-title::before {
+    content: "Fetched Server Hosts Successfully";
+    position: absolute;
+    inset: 0;
+    color: transparent;
+
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,.95) 50%,
+        transparent 100%
+    );
+
+    background-size: 220px 100%;
+    background-repeat: no-repeat;
+    background-position: -220px 0;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    animation: greenSweep 2.5s linear infinite;
+
+    pointer-events: none;
+    text-shadow: none !important;
+    -webkit-text-stroke: 0 !important;
+    filter: none !important;
+}
+text-shadow: none !important;
+-webkit-text-stroke: 0 !important;
+filter: none !important;
+    );
+    background-size:220px 100%;
+    background-repeat:no-repeat;
+    background-position:-220px 0;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:greenSweep 2.5s linear infinite;
+    pointer-events:none;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+}
+
+        @keyframes sweep{
+            from{
+                background-position:-300px;
+            }
+            to{
+                background-position:600px;
+            }
+        }
+
+        .dots::after{
+            content:"";
+            animation:dots 1.5s steps(4,end) infinite;
+        }
+
+        @keyframes dots{
+            0%{content:"";}
+            25%{content:".";}
+            50%{content:"..";}
+            75%{content:"...";}
+            100%{content:"";}
+        }
+
+        .init-line{
+            margin-top:18px;
+            width:100%;
+            height:3px;
+            background:#222;
+            border-radius:3px;
+            overflow:hidden;
+        }
+
+        .init-line::before{
+            content:"";
+            display:block;
+            width:0%;
+            height:100%;
+            background:#fff;
+            box-shadow:0 0 10px #fff;
+            animation:loading 7s linear forwards;
+        }
+
+        @keyframes loading{
+            from{
+                width:0%;
+            }
+            to{
+                width:100%;
+            }
+        }
+        
+       #page3 {
+    background: var(--bg-radiant);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+}
+
+       .top-container {
+    width: 100%;
+    max-width: 540px;
+    padding: 0;
+    margin: 0 auto;
+    height: 326px;
+    flex: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1.17fr) minmax(0, 1fr);
+    gap: 8px;
+    box-sizing: border-box;
+}
+        .system-status-panel {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px 10px 10px;
+    overflow: hidden;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+}
+        .status-header{
+            font-size:.9rem;
+            margin-bottom:8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+       .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: slowBeat 7.1s infinite ease-in-out;
+        }
+        .status-indicator.good {
+            background: var(--status-green);
+            box-shadow: 0 0 8px var(--status-green);
+        }
+        .status-indicator.medium {
+            background: var(--status-yellow);
+            box-shadow: 0 0 8px var(--status-yellow);
+        }
+        .status-indicator.high {
+            background: var(--status-red);
+            box-shadow: 0 0 8px var(--status-red);
+        }
+        @keyframes slowBeat {
+            0%,100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.35); opacity: 1; }
+        }
+        .status-row{
+            font-size:.85rem;
+            line-height:1.4;
+            margin:3px 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 4px;
+        }
+        .status-good { color: var(--status-green); font-weight: 500; }
+        .status-wait { color: var(--status-yellow); }
+        .status-high { color: var(--status-red); 
+            text-shadow: 0 0 4px var(--status-red);
+            animation: softRadiant 2s infinite ease-in-out;
+        }
+        @keyframes softRadiant {
+            0%,100% { text-shadow: 0 0 2px var(--status-red); }
+            50% { text-shadow: 0 0 6px var(--status-red); }
+        }
+        .visitor-count {
+            color: var(--status-green);
+            font-weight: 600;
+        }
+        .graph-container {
+    height: 48px;
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 0 2px 4px;
+    position: relative;
+    overflow: hidden;
+}
+       .graph-bar {
+    flex: 1;
+    min-height: 3px;
+    height: 10px;
+
+    border-radius: 3px 3px 1px 1px;
+
+    background: linear-gradient(
+        180deg,
+        #00f5ff 0%,
+        #00c3ff 55%,
+        rgba(0,245,255,0.35) 100%
+    );
+
+    box-shadow:
+        0 0 5px rgba(0,245,255,0.65),
+        0 0 10px rgba(0,245,255,0.25);
+
+    transition:
+        height 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.4s ease,
+        box-shadow 0.4s ease;
+
+    opacity: 0.75;
+}
+
+.graph-bar:nth-child(4),
+.graph-bar:nth-child(5) {
+    opacity: 1;
+
+    box-shadow:
+        0 0 7px rgba(0,245,255,0.8),
+        0 0 14px rgba(0,245,255,0.3);
+}
+        .network-monitor-label{
+            font-size:.67rem;
+            margin-top: 2px;
+            text-align: center;
+        }
+        .log-panel {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 10px 10px;
+    overflow: hidden;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    font-family: 'Courier New', Consolas, monospace;
+}
+        .log-header{
+    font-size:.75rem;
+    margin-bottom:4px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+}
+
+.clear-log-btn{
+    position:relative;
+    padding:3px 8px;
+    background:transparent;
+    border:1px solid rgba(0,245,255,.18);
+    border-radius:4px;
+    color:#94a3b8;
+    font-size:9px;
+    line-height:1;
+    cursor:pointer;
+    overflow:hidden;
+    transition:
+        color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+.clear-log-btn::before{
+    content:"";
+    position:absolute;
+    top:-100%;
+    left:0;
+    width:100%;
+    height:100%;
+    background:linear-gradient(
+        180deg,
+        transparent,
+        rgba(0,245,255,.45),
+        transparent
+    );
+    pointer-events:none;
+}
+
+.clear-log-btn:hover{
+    color:#00f5ff;
+    border-color:rgba(0,245,255,.7);
+    box-shadow:
+        0 0 6px rgba(0,245,255,.25),
+        inset 0 0 6px rgba(0,245,255,.08);
+}
+
+.clear-log-btn:active{
+    transform:scale(.94);
+}
+
+.clear-log-btn.clearing{
+    color:#00f5ff;
+    border-color:#00f5ff;
+    box-shadow:
+        0 0 10px rgba(0,245,255,.5),
+        inset 0 0 8px rgba(0,245,255,.12);
+}
+
+.clear-log-btn.clearing::before{
+    animation:clearScan .45s linear;
+}
+
+@keyframes clearScan{
+    0%{
+        top:-100%;
+    }
+    100%{
+        top:100%;
+    }
+}
+
+.clear-log-btn:hover{
+    color:#fff;
+    border-color:rgba(100,200,255,.6);
+    box-shadow:0 0 8px rgba(100,200,255,.35);
+}
+
+.clear-log-btn:active{
+    transform:scale(.94);
+}
+.log-bottom{
+    flex:none;
+    width:100%;
+    height:20px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-start;
+    padding-top:3px;
+}
+
+.log-divider{
+    display:block;
+    width:100%;
+    height:1px;
+    margin:2px 0 4px;
+    background:rgba(255,255,255,0.12);
+}
+
+.log-content.clearing{
+    animation:cyberLogClear .45s ease-out forwards;
+}
+
+@keyframes cyberLogClear{
+    0%{
+        opacity:1;
+        transform:translateX(0);
+        filter:none;
+    }
+
+    25%{
+        opacity:.75;
+        transform:translateX(1px);
+        filter:
+            brightness(1.8)
+            drop-shadow(0 0 4px #00f5ff);
+    }
+
+    50%{
+        opacity:.45;
+        transform:translateX(-1px);
+        filter:
+            brightness(1.4)
+            drop-shadow(0 0 7px #00f5ff);
+    }
+
+    75%{
+        opacity:.15;
+        transform:translateX(0);
+        filter:
+            brightness(2)
+            drop-shadow(0 0 10px #00f5ff);
+    }
+
+    100%{
+        opacity:0;
+        transform:translateY(-3px);
+        filter:none;
+    }
+}
+.log-content{
+    flex:1;
+    min-height:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    font-size:.75rem;
+    line-height:1.25;
+    text-align:left;
+    padding-right:3px;
+}
+      
+.log-content::-webkit-scrollbar{
+    width:3px;
+}
+
+.log-content::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.log-content::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.25);
+    border-radius:3px;
+}
+
+.log-content::-webkit-scrollbar-thumb:hover{
+    background:rgba(100,200,255,.6);
+}
+        .log-entry{
+            padding:1px 0;
+            margin:0;
+            text-align:left;
+        }
+         .ping-green {
+    color: #10b981;
+    text-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+}
+
+.ping-yellow {
+    color: #eab308;
+    text-shadow: 0 0 4px rgba(234, 179, 8, 0.5);
+}
+
+.ping-red {
+    color: #ef4444;
+    text-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+}
+        .glass-panel {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 14px 10px 18px;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+}
+        .page-title {
+            font-size: clamp(0.8rem, 2.2vh, 1.3rem);
+            text-align: center;
+            margin: 0.4vh 0;
+            text-shadow: 0 0 12px var(--glow);
+            font-weight: 600;
+        }
+
+       .protocol-row-top,
+.protocol-row-bottom {
+    display: grid;
+    gap: 4px;
+    margin: 4px auto;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+}
+        .protocol-row-top { grid-template-columns: repeat(3, 1fr); }
+        .protocol-row-bottom { grid-template-columns: repeat(4, 1fr); }
+        .protocol-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 10px 4px;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    min-width: 0;
+}
+        .protocol-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px var(--glow);
+            border-color: var(--glow);
+        }
+        .protocol-card.selected {
+            border-color: var(--glow);
+            box-shadow: 0 0 20px var(--glow);
+            background: rgba(100, 200, 255,  0.12);
+        }
+        .config-box {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 4px 0;
+    width: 100%;
+    height: 100px;
+    flex: none;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.3;
+    color: #e0f7ff;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+        .copy-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5vh;
+            margin-top: 0.2vh;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: clamp(0.75rem, 1.9vh, 1rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            border-color: var(--glass-border);
+            background: var(--glass);
+            color: var(--white);
+        }
+
+        .copy-btn.copied {
+            background: rgba(34,197,94,.18);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+        .copy-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5vh;
+            margin-top: 0.2vh;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: clamp(0.75rem, 1.9vh, 1rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+       .dropdown-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 4px;
+    width: 100%;
+}
+        .dropdown-container label {
+            display: block;
+            margin-bottom: 0.25vh;
+            font-size: clamp(0.65rem, 1.6vh, 0.9rem);
+            opacity: 0.9;
+        }
+        select {
+            width: 100%;
+            padding: 0.4vh 0.7vw;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--white);
+            font-size: clamp(0.65rem, 1.6vh, 0.9rem);
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7vw center;
+        }
+        select option { background: #0a1929; color: white; }
+
+        .quote-section {
+    text-align: center;
+    padding: 8px 10px 0;
+    margin-top: 2px;
+    width: 100%;
+}
+        .quote-main {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 0.2vh;
+        }
+        .quote-phonetic {
+            font-size: 14px;
+            opacity: 0.75;
+            margin-bottom: 0.2vh;
+            font-style: italic;
+        }
+        .quote-desc {
+            font-size: 15px;
+            opacity: 0.85;
+            line-height: 1.4;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .server-host-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+       .fetch-btn {
+    flex: 0 0 auto;
+    min-width: 180px;
+    height: 54px;
+    padding: 8px 14px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    color: var(--white);
+    cursor: pointer;
+    transition: var(--transition);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    font-size: 16px;
+}
+
+        .fetch-btn:hover{
+            border-color: var(--glow);
+            box-shadow: 0 0 15px var(--glow);
+        }
+        .fetch-btn.active-glow{
+            border-color: var(--glow);
+            box-shadow: 0 0 20px var(--glow);
+            background: rgba(100, 200, 255, 0.12);
+        }
+        .copy-btn:focus,
+        .copy-btn:active,
+        .fetch-btn:focus,
+        .fetch-btn:active {
+            outline: none;
+            box-shadow: none;
+        }
+       #serverHostSelect {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+}
+        #serverHostSelect:disabled{
+            opacity: .5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+
+        .center-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 10, 15, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .center-loading-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .center-loading-overlay.closing {
+            opacity: 0;
+        }
+
+        .fetch-loading-wrapper {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fetch-loading-wrapper.hidden {
+            opacity: 0;
+            transform: translateY(-6px);
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .fetch-loading-text{
+            position:relative;
+            font-size:17px;
+            font-weight:600;
+            color:#94a3b8;
+            overflow:hidden;
+            white-space:nowrap;
+            text-shadow:none !important;
+            -webkit-text-stroke:0 !important;
+            filter:none !important;
+            letter-spacing: 0.2px;
+        }
+        .fetch-loading-text::before,
+.loading-text::before{
+            content: attr(data-text);
+            position:absolute;
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+            color:transparent;
+            background:linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255,255,255,0.9) 50%,
+                transparent 100%
+            );
+            background-size:300px 100%;
+            background-repeat:no-repeat;
+            -webkit-background-clip:text;
+            background-clip:text;
+            animation:sweep 2.5s linear infinite;
+            text-shadow:none !important;
+            -webkit-text-stroke:0 !important;
+            filter:none !important;
+        }
+         
+        .popup-overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:transparent;
+    backdrop-filter:none;
+    z-index:10000;
+}
+        .popup{
+    position:relative;
+    width:380px;
+    max-width:90%;
+    background:#101722;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+    padding:26px 24px;
+    animation:popup .25s ease;
+}
+
+@keyframes popup{
+    from{
+        opacity:0;
+        transform:translateY(12px) scale(.97);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.close{
+    position:absolute;
+    top:12px;
+    right:14px;
+    background:none;
+    border:none;
+    color:#8b95a5;
+    font-size:24px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.close:hover{
+    color:#fff;
+}
+
+.popup-content{
+    text-align:center;
+    padding-top:8px;
+}
+
+.success-title{
+    position:relative;
+    display:inline-block;
+    font-size:20px;
+    font-weight:600;
+    color:#22c55e;
+    margin-bottom:14px;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+}
+
+.success-title::before{
+    content:"Fetched Server Hosts Successfully";
+    position:absolute;
+    inset:0;
+    color:transparent;
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,.95) 50%,
+        transparent 100%
+     text-shadow:none !important;
+     -webkit-text-stroke:0 !important;
+     filter:none !important;
+    );
+    background-size:220px 100%;
+    background-repeat:no-repeat;
+    background-position:-220px 0;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:greenSweep 2.5s linear infinite;
+    pointer-events:none;
+}
+
+@keyframes greenSweep{
+    from{
+        background-position:-220px 0;
+    }
+    to{
+        background-position:220px 0;
+    }
+}
+
+.popup-content p{
+    color:#a8b2bf;
+    font-size:14px;
+    line-height:1.6;
+        }
+.title-sweep{
+    position:relative;
+    display:inline-block;
+    color:#F8FAFC;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.title-sweep::before{
+    content:attr(data-text);
+    position:absolute;
+    inset:0;
+    color:transparent;
+    background:linear-gradient(
+        90deg,
+        #00f5ff,
+        #8b5cf6,
+        #ff2bd6,
+        #00f5ff
+    );
+
+    background-size:300% 100%;
+    background-repeat:no-repeat;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:cyberMove 4s linear infinite;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+    pointer-events:none;
+}
+
+@keyframes cyberMove{
+    0%{
+        background-position:0% 50%;
+    }
+
+    100%{
+        background-position:300% 50%;
+    }
+}
+
+    background-size:300px 100%;
+    background-repeat:no-repeat;
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:sweep 2.5s linear infinite;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+    pointer-events:none;
+    }
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    #page3 {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 8px;
+        gap: 7px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .top-container {
+        width: 100%;
+        height: 29vh;
+        min-height: 170px;
+        max-height: 310px;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 7px;
+        flex: none;
+    }
+
+    .system-status-panel,
+    .log-panel {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+
+    .system-status-panel {
+        padding: 11px 9px 7px;
+    }
+
+    .log-panel {
+        padding: 11px 8px 7px;
+    }
+
+    .status-header {
+        font-size: clamp(.68rem, 2.8vw, .9rem);
+        margin-bottom: 6px;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .status-indicator {
+        width: 7px;
+        height: 7px;
+        flex: none;
+    }
+
+    .status-row {
+        font-size: clamp(.62rem, 2.7vw, .82rem);
+        line-height: 1.35;
+        margin: 2px 0;
+        gap: 3px;
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .network-monitor-label {
+        font-size: clamp(.52rem, 2vw, .68rem);
+        margin-top: 2px;
+        white-space: nowrap;
+    }
+
+    .graph-container {
+        height: 42px;
+        margin-top: auto;
+        gap: 3px;
+        padding: 0 2px 3px;
+        min-width: 0;
+    }
+
+    .graph-bar {
+        min-width: 0;
+        min-height: 2px;
+    }
+
+    .log-header {
+        font-size: clamp(.56rem, 2.4vw, .75rem);
+        margin-bottom: 3px;
+        white-space: nowrap;
+    }
+
+    .log-divider {
+        margin: 1px 0 3px;
+    }
+
+    .log-content {
+        min-width: 0;
+        font-size: clamp(.52rem, 2.2vw, .7rem);
+        line-height: 1.25;
+        padding-right: 2px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .log-entry {
+        white-space: nowrap;
+    }
+
+    .log-bottom {
+        height: 19px;
+        padding-top: 2px;
+    }
+
+    .clear-log-btn {
+        padding: 3px 7px;
+        font-size: 8px;
+    }
+
+    .glass-panel {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 9px 8px 9px;
+        border-radius: 10px;
+        gap: 4px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .page-title {
+        width: 100%;
+        font-size: clamp(.72rem, 3.7vw, 1.1rem);
+        line-height: 1.2;
+        margin: 2px 0 4px;
+        overflow: hidden;
+    }
+
+    .title-sweep {
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+
+    .protocol-row-top {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin: 2px 0;
+    }
+
+    .protocol-row-bottom {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        margin: 2px 0;
+    }
+
+    .protocol-card {
+        width: 100%;
+        min-width: 0;
+        min-height: 43px;
+        padding: 6px 2px;
+        border-radius: 6px;
+        font-size: clamp(.58rem, 2.7vw, .85rem);
+        line-height: 1.1;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: clip;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dropdown-group {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 5px;
+        margin-bottom: 2px;
+    }
+
+    .dropdown-container {
+        min-width: 0;
+    }
+
+    .dropdown-container label {
+        display: block;
+        font-size: clamp(.55rem, 2.5vw, .75rem);
+        line-height: 1.1;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    select {
+        width: 100%;
+        min-width: 0;
+        height: 34px;
+        padding: 4px 24px 4px 6px;
+        border-radius: 6px;
+        font-size: clamp(.54rem, 2.4vw, .75rem);
+        background-position: right 6px center;
+    }
+
+    .server-host-controls {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(92px, 34%);
+        gap: 5px;
+        margin-top: 4px;
+        min-width: 0;
+    }
+
+
+    #serverHostSelect {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        height: 38px;
+        font-size: clamp(.54rem, 2.4vw, .75rem);
+        padding-left: 6px;
+        padding-right: 24px;
+    }
+
+    .fetch-btn {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        height: 38px;
+        padding: 5px 4px;
+        font-size: clamp(.55rem, 2.5vw, .78rem);
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .config-box {
+        width: 100%;
+        height: clamp(70px, 13vh, 105px);
+        min-height: 70px;
+        margin: 3px 0;
+        padding: 7px;
+        border-radius: 7px;
+        font-size: clamp(.56rem, 2.4vw, .75rem);
+        line-height: 1.3;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .copy-btn {
+        width: 100%;
+        height: 37px;
+        min-height: 37px;
+        margin-top: 1px;
+        padding: 5px;
+        border-radius: 6px;
+        font-size: clamp(.58rem, 2.5vw, .8rem);
+    }
+
+    .quote-section {
+        width: 100%;
+        padding: 4px 5px 0;
+        margin-top: 1px;
+        overflow: hidden;
+    }
+
+    .quote-main {
+        font-size: clamp(.75rem, 4vw, 1.15rem);
+        line-height: 1.15;
+        margin-bottom: 1px;
+    }
+
+    .quote-phonetic {
+        font-size: clamp(.55rem, 2.4vw, .75rem);
+        line-height: 1.1;
+        margin-bottom: 1px;
+    }
+
+    .quote-desc {
+        width: 100%;
+        font-size: clamp(.52rem, 2.2vw, .7rem);
+        line-height: 1.25;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+
+    #page3 {
+        padding: 5px;
+        gap: 5px;
+    }
+
+    .top-container {
+        height: 27vh;
+        min-height: 150px;
+    }
+
+    .system-status-panel {
+        padding: 8px 6px 5px;
+    }
+
+    .log-panel {
+        padding: 8px 6px 5px;
+    }
+
+    .status-header {
+        font-size: .61rem;
+        margin-bottom: 4px;
+    }
+
+    .status-row {
+        font-size: .56rem;
+        margin: 1px 0;
+    }
+
+    .graph-container {
+        height: 34px;
+        gap: 2px;
+    }
+
+    .network-monitor-label {
+        font-size: .46rem;
+    }
+
+    .log-header {
+        font-size: .51rem;
+    }
+
+    .log-content {
+        font-size: .47rem;
+    }
+
+    .clear-log-btn {
+        padding: 2px 5px;
+        font-size: 7px;
+    }
+
+    .glass-panel {
+        padding: 7px 6px 7px;
+        gap: 3px;
+    }
+
+    .page-title {
+        font-size: .65rem;
+        margin: 1px 0 3px;
+    }
+
+    .protocol-row-top,
+    .protocol-row-bottom {
+        gap: 3px;
+        margin: 1px 0;
+    }
+
+
+    .protocol-card {
+        min-height: 38px;
+        padding: 4px 1px;
+        font-size: .52rem;
+    }
+
+    .dropdown-group {
+        gap: 3px;
+    }
+
+    .dropdown-container label {
+        font-size: .49rem;
+
+        margin-bottom: 1px;
+    }
+
+    select {
+        height: 30px;
+        font-size: .48rem;
+        padding: 3px 20px 3px 5px;
+    }
+
+    .server-host-controls {
+        grid-template-columns: minmax(0, 1fr) minmax(80px, 34%);
+        gap: 3px;
+    }
+
+    #serverHostSelect,
+    .fetch-btn {
+        height: 34px;
+        font-size: .49rem;
+    }
+
+
+    .config-box {
+        height: 65px;
+        min-height: 65px;
+        padding: 5px;
+        font-size: .49rem;
+    }
+
+
+    .copy-btn {
+        height: 33px;
+        min-height: 33px;
+        font-size: .5rem;
+    }
+
+
+    .quote-main {
+        font-size: .7rem;
+    }
+
+
+    .quote-phonetic {
+        font-size: .48rem;
+    }
+
+
+    .quote-desc {
+        font-size: .45rem;
+        line-height: 1.15;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="center-loading-overlay" id="fetchOverlay">
+        <div class="container">
+            <div class="fetch-loading-wrapper" id="fetchLoadingWrapper">
+                <div class="fetch-loading-text" id="fetchLoadingText" data-text="Fetching Server Hosts">
+    Fetching Server Hosts<span class="dots"></span>
+</div>
+                <div class="fetch-progress-line"></div>
+            </div>
+         <div class="popup-overlay" id="successMsg" style="display:none;">
+
+    <div class="popup">
+
+        <button class="close" onclick="closePopup()">&times;</button>
+
+        <div class="popup-content">
+
+            <h2 class="success-title">
+                Fetched Server Hosts Successfully
+            </h2>
+
+            <p>
+                The latest server hosts have been retrieved and are now available for use.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+        </div>
+    </div>
+
+    <div id="page1" class="page active">
+        <div class="container">
+            <div class="loading-text" data-text="Connecting to Server">
+    Connecting to Server<span class="dots"></span>
+</div>
+            <div class="init-line"></div>
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <div class="top-container">
+            <div class="system-status-panel">
+                <div class="status-header">
+                    <strong>𝐒𝐄𝐑𝐕𝐄𝐑 𝐒𝐓𝐀𝐓𝐔𝐒 </strong> 
+                    <span class="status-indicator good" id="latencyDot"></span>
+                </div>
+                 <div class="status-row">𝐕𝐢𝐬𝐢𝐭𝐨𝐫𝐬:<span id="visitorCount" class="visitor-count">Loading...</span></div>
+                <div class="status-row">𝐘𝐨𝐮𝐫𝐈𝐏: <span id="userIP" class="status-high">Loading...</span></div>
+                <div class="status-row">𝐒𝐞𝐫𝐯𝐞𝐫𝐔𝐩𝐭𝐢𝐦𝐞: <span id="uptime" class="status-wait">00:00:00</span></div>
+               <div class="graph-container" id="activityGraph">
+    <div class="graph-bar" data-index="0"></div>
+    <div class="graph-bar" data-index="1"></div>
+    <div class="graph-bar" data-index="2"></div>
+    <div class="graph-bar" data-index="3"></div>
+    <div class="graph-bar" data-index="4"></div>
+    <div class="graph-bar" data-index="5"></div>
+    <div class="graph-bar" data-index="6"></div>
+    <div class="graph-bar" data-index="7"></div>
+</div>
+                <div class="network-monitor-label">𝐏𝐀𝐂𝐊𝐄𝐓 𝐅𝐋𝐎𝐖 𝐌𝐎𝐍𝐈𝐓𝐎𝐑</div>
+            </div>
+
+            <div class="log-panel">
+
+    <div class="log-header">
+        <span>𝐒𝐄𝐑𝐕𝐄𝐑 𝐄𝐕𝐄𝐍𝐓 𝐋𝐎𝐆</span>
+    </div>
+
+    <div class="log-divider"></div>
+
+    <div class="log-content" id="systemLog"></div>
+
+    <div class="log-bottom">
+        <button class="clear-log-btn" id="clearLogBtn">CLEAR</button>
+    </div>
+
+</div>
+</div>
+
+        <div class="glass-panel">
+            <h1 class="page-title">
+    <span
+        class="title-sweep"
+        data-text="𝐂𝐱𝐥𝐯𝐢𝐧 𝟏𝟐 𝐢𝐧 𝟏 𝐗𝐫𝐚𝐲 𝐌𝐮𝐥𝐭𝐢 𝐩𝐫𝐨𝐭𝐨𝐜𝐨𝐥 𝐒𝐞𝐫𝐯𝐞𝐫">
+        𝐂𝐱𝐥𝐯𝐢𝐧 𝟏𝟐 𝐢𝐧 𝟏 𝐗𝐫𝐚𝐲 𝐌𝐮𝐥𝐭𝐢 𝐩𝐫𝐨𝐭𝐨𝐜𝐨𝐥 𝐒𝐞𝐫𝐯𝐞𝐫
+    </span>
+</h1>
+            <div class="protocol-row-top">
+                <div class="protocol-card" data-transport="websocket">WEBSOCKET</div>
+                <div class="protocol-card" data-transport="http-upgrade">HTTP UPGRADE</div>
+                <div class="protocol-card" data-transport="xhttp">XHTTP</div>
+            </div>
+            <div class="protocol-row-bottom">
+                <div class="protocol-card" data-protocol="vless">Vless</div>
+                <div class="protocol-card" data-protocol="trojan">Trojan</div>
+                <div class="protocol-card" data-protocol="shadowsocks">Shadowsocks</div>
+                <div class="protocol-card" data-protocol="vmess">Vmess</div>
+            </div>
+
+            
+            <div class="dropdown-group">
+                <div class="dropdown-container">
+                    <label>Address Selection</label>
+                    <select id="addressSelect">
+                        <option value="fcmtoken.googleapis.com">fcmtoken.googleapis.com</option>
+                        <option value="firebase-settings.crashlytics.com">firebase-settings.crashlytics.com</option>
+                        <option value="app-analytics-services.com">app-analytics-services.com</option>
+                        <option value="ssl.google-analytics.com">ssl.google-analytics.com</option>
+                        <option value="beacons.gcp.gvt2.com">beacons.gcp.gvt2.com</option>
+                        <option value="socket.gleeze.com">socket.gleeze.com</option>
+                        <option value="redirector.gvt1.com">redirector.gvt1.com</option>
+                    </select>
+                </div>
+                <div class="dropdown-container">
+                    <label>Server Name Indication</label>
+                    <select id="sniSelect">
+                        <option value="fcmtoken.googleapis.com">fcmtoken.googleapis.com</option>
+                        <option value="cdn-settings.appsflyersdk.com">cdn-settings.appsflyersdk.com</option>
+                        <option value="firebase-settings.crashlytics.com">firebase-settings.crashlytics.com</option>
+                        <option value="ssl.google-analytics.com">ssl.google-analytics.com</option>
+                        <option value="conversions.appsflyer.com">conversions.appsflyer.com</option>
+                        <option value="benefits-client-production.voyagerapis.com">benefits-client-production.voyagerapis.com</option>
+                        <option value="api-bnpl.mayabank.ph">api-bnpl.mayabank.ph</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="server-host-controls">
+                <select id="serverHostSelect" disabled>
+                    <option value="">Select Server Host</option>
+                </select>
+                <button class="fetch-btn" id="fetchHostBtn">FETCH HOSTS</button>
+            </div>
+
+            <div class="config-box" id="configOutput"></div>
+            <button class="copy-btn" id="copyConfigBtn" disabled>COPY CONFIG</button>
+
+            <div class="quote-section">
+                <div class="quote-main">keep moving forward</div>
+                <div class="quote-phonetic">/kiːp ˈmuːvɪŋ ˈfɔːrwərd/</div>
+                <div class="quote-desc">means refusing to give up, no matter how difficult the path becomes, and continuing to fight for the future you believe in.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const page1 = document.getElementById('page1');
+        const page3 = document.getElementById('page3');
+        const elVisitor = document.getElementById('visitorCount');
+        const elIP = document.getElementById('userIP');
+        const elUptime = document.getElementById('uptime');
+        const elLog = document.getElementById('systemLog');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+        const graphBars = document.querySelectorAll('.graph-bar');
+        const latencyDot = document.getElementById('latencyDot');
+        const configOutput = document.getElementById('configOutput');
+        const copyConfigBtn = document.getElementById('copyConfigBtn');
+        const addressSelect = document.getElementById('addressSelect');
+        const sniSelect = document.getElementById('sniSelect');
+        const serverHostSelect = document.getElementById('serverHostSelect');
+        const fetchHostBtn = document.getElementById('fetchHostBtn');
+        const transportCards = document.querySelectorAll('[data-transport]');
+        const protocolCards = document.querySelectorAll('[data-protocol]');
+        const fetchOverlay = document.getElementById('fetchOverlay');
+        const successMsg = document.getElementById('successMsg');
+        const fetchLoadingText = document.getElementById('fetchLoadingText');
+        const fetchLoadingWrapper = document.getElementById('fetchLoadingWrapper');
+        function closePopup() {
+
+    successMsg.style.display = "none";
+    fetchOverlay.classList.add("closing");
+    setTimeout(() => {
+
+        fetchOverlay.classList.remove("active");
+        fetchOverlay.classList.remove("closing");
+
+    },400);
+
+}
+        let serverStartTime = null;
+        const BACKEND_ENDPOINT = '/api/status';    
+        const MASTER_LIST_URL = '/server.json';
+        let activityHistory = Array(8).fill(0);
+        let currentLatency = 'good';
+        let logEntries = [];
+        const MAX_LOGS = 50;
+        let pageLoadTime = Date.now();
+        let selectedTransport = null;
+        let selectedProtocol = 'vless';
+        let cloudRunHost = null; 
+        let transportGlowTimer;
+        const configTemplates = {
+            websocket: {
+                vless: 'vless://cxlvin777@{{ADDRESS}}:443?encryption=none&type=ws&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinVlWS%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinVlWS',
+                trojan: 'trojan://Cxlvin777@{{ADDRESS}}:443?type=ws&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinTRWS%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinTrWS',
+                shadowsocks: 'ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpDeGx2aW43Nzc=@{{ADDRESS}}:443?type=ws&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinSSWS%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinSSWS - use default dns',
+                vmess: 'vmess://{{VMESS_WS}}'
+            },
+            'http-upgrade': {
+                vless: 'vless://cxlvin777@{{ADDRESS}}:443?encryption=none&type=httpupgrade&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinVlHU%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinVlHU',
+                trojan: 'trojan://Cxlvin777@{{ADDRESS}}:443?type=httpupgrade&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinTRHU%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinTRHU',
+                shadowsocks: 'ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpDeGx2aW43Nzc=@{{ADDRESS}}:443?type=httpupgrade&host={{SELECTED_HOST}}&headerType=none&path=%2FCxlvinSSHU%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinSSHU - use default dns',
+                vmess: 'vmess://{{VMESS_HU}}'
+            },
+            xhttp: {
+                vless: 'vless://cxlvin777@{{ADDRESS}}:443?encryption=none&type=xhttp&host={{SELECTED_HOST}}&headerType=auto&path=%2FCxlvinVlXH%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinVlXH',
+                trojan: 'trojan://Cxlvin777@{{ADDRESS}}:443?type=xhttp&host={{SELECTED_HOST}}&headerType=auto&path=%2FCxlvinTRXH%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinTRXH',
+                shadowsocks: 'ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpDeGx2aW43Nzc=@{{ADDRESS}}:443?type=xhttp&host={{SELECTED_HOST}}&headerType=auto&path=%2FCxlvinSSXH%3Fed%3D2560&security=tls&sni={{SNI}}#CxlvinSSXH - use default dns',
+                vmess: 'vmess://{{VMESS_XH}}'
+            }
+        };
+
+        const vmessBase = {
+            ws: {
+                add: 'app-analytics-services.com',
+                port: '443',
+                id: 'cxlvin777',
+                aid: '0',
+                scy: 'auto',
+                net: 'ws',
+                type: 'none',
+                host: '',
+                path: '/CxlvinVMWS?ed=2560',
+                tls: 'tls',
+                sni: '',
+                ps: 'CxlvinVMWS',
+                v: '2'
+            },
+            hu: {
+                add: 'app-analytics-services.com',
+                port: '443',
+                id: 'cxlvin777',
+                aid: '0',
+                scy: 'auto',
+                net: 'httpupgrade',
+                type: 'none',
+                host: '',
+                path: '/CxlvinVMHU?ed=2560',
+                tls: 'tls',
+                sni: '',
+                ps: 'CxlvinVMHU',
+                v: '2'
+            },
+            xh: {
+                add: 'app-analytics-services.com',
+                port: '443',
+                id: 'cxlvin777',
+                aid: '0',
+                scy: 'auto',
+                net: 'xhttp',
+                type: 'auto',
+                host: '',
+                path: '/CxlvinVMXH?ed=2560',
+                tls: 'tls',
+                sni: '',
+                ps: 'CxlvinVMXH',
+                v: '2'
+            }
+        };
+        
+        async function fetchAllServers() {
+    addLog('Loading latest server list...');
+
+    try {
+        const res = await fetch(MASTER_LIST_URL + '?t=' + Date.now());
+
+        if (!res.ok) {
+            throw new Error('Failed');
+        }
+
+        const data = await res.json();
+
+        deployedServers = data.deployed_servers || [];
+
+        const currentHost = location.hostname;
+
+        if (
+            currentHost.includes('.run.app') &&
+            !deployedServers.includes(currentHost)
+        ) {
+            deployedServers.push(currentHost);
+        }
+
+        updateServerHostDropdown();
+
+        addLog('Server list updated successfully.');
+
+    } catch (error) {
+
+        addLog('Failed to load server list.');
+
+    }
+}
+
+        function updateServerHostDropdown() {
+            serverHostSelect.innerHTML = `<option value="">Select Server Host</option>`;
+            deployedServers.forEach(host => {
+                const option = document.createElement('option');
+                option.value = host;
+                option.textContent = host;
+                serverHostSelect.appendChild(option);
+            });
+        }
+
+        async function detectCloudRunHost() {
+            try {
+                const currentHost = window.location.hostname;
+                if (currentHost && currentHost.includes('.run.app')) {
+                    cloudRunHost = currentHost;
+                    addLog('Current server host detected');
+                    updateConfigOutput();
+                    return currentHost;
+                } else {
+                    cloudRunHost = null;
+                    return null;
+                }
+            } catch (err) {
+                cloudRunHost = null;
+                return null;
+            }
+        }
+
+        function formatElapsedTime() {
+            const elapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
+            const h = String(Math.floor(elapsed / 3600)).padStart(2,'0');
+            const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2,'0');
+            const s = String(Math.floor(elapsed % 60)).padStart(2,'0');
+            return `[+${h}:${m}:${s}]`;
+        }
+        function addLog(message) {
+            logEntries.push(`<div class="log-entry">${formatElapsedTime()} : ${message}</div>`);
+            if (logEntries.length > MAX_LOGS) logEntries.shift();
+            elLog.innerHTML = logEntries.join('');
+            elLog.scrollTop = elLog.scrollHeight;
+        }
+        clearLogBtn.addEventListener('click', () => {
+
+    if (elLog.classList.contains('clearing')) return;
+
+    clearLogBtn.classList.add('clearing');
+    elLog.classList.add('clearing');
+
+    setTimeout(() => {
+
+        logEntries = [];
+        elLog.innerHTML = '';
+
+        elLog.classList.remove('clearing');
+
+        clearLogBtn.classList.remove('clearing');
+
+        addLog('Server event log cleared.');
+
+    }, 450);
+});
+        function getSavedStartTime() {
+            const saved = localStorage.getItem('serverStartTime');
+            if (saved) return parseInt(saved, 10);
+            const now = Date.now();
+            localStorage.setItem('serverStartTime', now);
+            return now;
+        }
+        function formatUptime(seconds) {
+            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const s = String(Math.floor(seconds % 60)).padStart(2,'0');
+            return `${h}:${m}:${s}`;
+        }
+        function updateLiveUptime() {
+            if (!serverStartTime) return;
+            const elapsed = Math.floor((Date.now() - serverStartTime) / 1000);
+            elUptime.textContent = formatUptime(elapsed);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                page1.classList.remove('active');
+                page3.classList.add('active');
+                
+                addLog('System Initializing...');
+                loadAllRealData();
+                setInterval(updateActivityGraph, 2000);
+                setInterval(updateLatencyStatus, 3000);
+                serverStartTime = getSavedStartTime();
+                updateLiveUptime();
+                setInterval(updateLiveUptime, 1000);
+                detectCloudRunHost();
+                fetchAllServers();
+                addLog('Server Status: READY');
+                updateConfigOutput();
+            }, 7000);
+        });
+
+        transportCards.forEach(card => {
+            card.addEventListener('click', () => {
+                transportCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedTransport = card.dataset.transport;
+                addLog(`Transport Selected → ${selectedTransport.toUpperCase()}`);
+                clearTimeout(transportGlowTimer);
+                transportGlowTimer = setTimeout(() => {
+                    if (!selectedProtocol) {
+                        card.classList.remove('selected');
+                    }
+                }, 7000);
+                updateConfigOutput();
+            });
+        });
+
+        protocolCards.forEach(card => {
+            card.addEventListener('click', () => {
+                protocolCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedProtocol = card.dataset.protocol;
+                addLog(`Protocol Selected → ${selectedProtocol.toUpperCase()}`);
+                clearTimeout(transportGlowTimer);
+                updateConfigOutput();
+            });
+        });
+
+        addressSelect.addEventListener('change', () => {
+            addLog(`Address changed → ${addressSelect.value}`);
+            updateConfigOutput();
+        });
+        sniSelect.addEventListener('change', () => {
+            addLog(`SNI changed → ${sniSelect.value}`);
+            updateConfigOutput();
+        });
+
+        serverHostSelect.addEventListener('change', () => {
+            cloudRunHost = serverHostSelect.value || null;
+
+            if (cloudRunHost) {
+                addLog(`Server Host Selected → ${cloudRunHost}`);
+                copyConfigBtn.disabled = false;
+                fetchHostBtn.classList.remove('active-glow');
+            } else {
+                addLog('No server host selected');
+                copyConfigBtn.disabled = true;
+            }
+
+            updateConfigOutput();
+        });
+
+        fetchHostBtn.addEventListener('click', async () => {
+             
+            fetchHostBtn.disabled = true;
+            fetchHostBtn.textContent = 'FETCHING...';
+            fetchHostBtn.classList.add('active-glow');
+            
+            fetchOverlay.classList.remove('active', 'closing');
+            void fetchOverlay.offsetWidth;
+            fetchLoadingWrapper.classList.remove('hidden');
+            successMsg.classList.remove('show');
+            fetchOverlay.classList.add('active');
+
+            await fetchAllServers();
+serverHostSelect.disabled = false;
+
+addLog(`Total ${deployedServers.length} server(s) available`);
+
+            setTimeout(() => {
+                fetchLoadingWrapper.classList.add('hidden');
+
+                setTimeout(() => {
+                    successMsg.style.display = "flex";
+
+setTimeout(() => {
+    closePopup();
+}, 20000);
+
+                }, 300);
+
+            }, 4500);
+
+            fetchHostBtn.textContent = 'FETCH HOSTS';
+            fetchHostBtn.disabled = false;
+        });
+
+        copyConfigBtn.addEventListener('click', async () => {
+            const text = configOutput.textContent;
+
+            try {
+                await navigator.clipboard.writeText(text);
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+
+            copyConfigBtn.textContent = 'COPIED ✓';
+            copyConfigBtn.classList.add('copied');
+            addLog('Configuration Copied: SUCCESS');
+
+            setTimeout(() => {
+                copyConfigBtn.textContent = 'COPY CONFIG';
+                copyConfigBtn.classList.remove('copied');
+            }, 2000);
+
+            document.querySelectorAll('.protocol-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            selectedTransport = null;
+            selectedProtocol = null;
+            clearTimeout(transportGlowTimer);
+        });
+
+        function updateActivityGraph(currentVisitors = 0) {
+            activityHistory.shift();
+            const baseValue = Math.max(1, currentVisitors || Math.floor(Math.random() * 6) + 2);
+            activityHistory.push(baseValue * (0.4 + Math.random() * 0.6));
+            const maxValue = Math.max(...activityHistory, 1);
+            graphBars.forEach((bar, idx) => {
+                bar.style.height = `${Math.max(3, (activityHistory[idx]/maxValue)*40)}px`;
+            });
+        }
+        function updateLatencyStatus() {
+    let ping;
+
+    
+    if (Math.random() < 0.03) {
+        ping = Math.floor(Math.random() * (199 - 180 + 1)) + 180;
+    } 
+    
+    else if (Math.random() < 0.85) {
+        ping = Math.floor(Math.random() * (350 - 200 + 1)) + 200;
+    } 
+    
+    else {
+        ping = Math.floor(Math.random() * (370 - 351 + 1)) + 351;
+    }
+
+    let statusClass;
+
+    if (ping < 200) {
+        currentLatency = 'good';
+        statusClass = 'ping-green';
+    } else if (ping <= 350) {
+        currentLatency = 'medium';
+        statusClass = 'ping-yellow';
+    } else {
+        currentLatency = 'high';
+        statusClass = 'ping-red';
+    }
+
+    latencyDot.className = 'status-indicator ' + currentLatency;
+
+    logEntries.push(
+        `<div class="log-entry">
+            ${formatElapsedTime()} : [PING] Server response:
+            <span class="${statusClass}">${ping}ms</span>
+        </div>`
+    );
+
+    if (logEntries.length > MAX_LOGS) {
+        logEntries.shift();
+    }
+
+    elLog.innerHTML = logEntries.join('');
+    elLog.scrollTop = elLog.scrollHeight;
+}
+
+        function updateConfigOutput() {
+            const selectedAddress = addressSelect.value;
+            const selectedSni = sniSelect.value;
+            const activeHostParam = cloudRunHost || selectedSni;
+
+            if (!selectedTransport || !selectedProtocol || !activeHostParam) {
+                configOutput.textContent = 'Select Transport, Protocol and Server Host to generate config';
+                return;
+            }
+
+            let template = configTemplates[selectedTransport][selectedProtocol];
+
+            if (selectedProtocol === 'vmess') {
+                let vmessObj;
+                if (selectedTransport === 'websocket') vmessObj = {...vmessBase.ws};
+                if (selectedTransport === 'http-upgrade') vmessObj = {...vmessBase.hu};
+                if (selectedTransport === 'xhttp') vmessObj = {...vmessBase.xh};
+                vmessObj.add = selectedAddress;
+                vmessObj.sni = selectedSni;
+                vmessObj.host = activeHostParam;
+                const encoded = btoa(JSON.stringify(vmessObj));
+                template = template.replace('{{VMESS_WS}}', encoded).replace('{{VMESS_HU}}', encoded).replace('{{VMESS_XH}}', encoded);
+            }
+
+            const finalConfig = template
+                .replace(/{{ADDRESS}}/g, selectedAddress)
+                .replace(/{{SNI}}/g, selectedSni)
+                .replace(/{{SELECTED_HOST}}/g, activeHostParam);
+
+            configOutput.textContent = finalConfig;
+        }
+
+        async function loadAllRealData() {
+            updateActivityGraph();
+            updateLatencyStatus();
+            updateConfigOutput();
+            try {
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+                elIP.textContent = ipData.ip;
+                elIP.classList.remove('status-wait');
+                elIP.classList.add('status-high')
+                addLog(`Public IP detected: ${ipData.ip}`);
+            } catch (err) {
+                elIP.textContent = 'Unavailable';
+                addLog('Could not fetch public IP');
+            }
+
+            try {
+                const visitorRes = await fetch('https://api.countapi.xyz/hit/cxlvin-server/visits');
+                const visitorData = await visitorRes.json();
+                elVisitor.textContent = visitorData.value;
+                addLog(`Total visitors: ${visitorData.value}`);
+            } catch (err) {
+                elVisitor.textContent = '1';
+                addLog('Visitor count offline');
+            }
+        }
+    </script>
+</body>
+</html>
