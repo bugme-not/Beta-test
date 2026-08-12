@@ -89,16 +89,57 @@
         }
 
         .loading-text{
-            position:relative;
-            font-size:18px;
-            font-weight:bold;
-            color:#7f8c99;
-            overflow:hidden;
-            white-space:nowrap;
-            text-shadow:none !important;
-            -webkit-text-stroke:0 !important;
-            filter:none !important;
-        }
+    position:relative;
+    font-size:18px;
+    font-weight:bold;
+    color:#7f8c99;
+    overflow:hidden;
+    white-space:nowrap;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+}
+
+.loading-text::before{
+    content:attr(data-text);
+    position:absolute;
+    inset:0;
+    color:transparent;
+
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 15%,
+        rgba(255,255,255,.98) 50%,
+        transparent 85%,
+        transparent 100%
+    );
+
+    background-size:180px 100%;
+    background-repeat:no-repeat;
+    background-position:-180px 0;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    animation:textLightSweep 1.9s linear infinite;
+
+    pointer-events:none;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+}
+
+@keyframes textLightSweep{
+    0%{
+        background-position:-180px 0;
+    }
+
+    100%{
+        background-position:calc(100% + 180px) 0;
+    }
+}
 
         .success-title::before {
     content: "Fetched Server Hosts Successfully";
@@ -307,28 +348,37 @@ filter: none !important;
 .red-label {
     color: #ff1744;
     text-shadow:
-        0 0 4px #ff1744,
-        0 0 10px #ff1744,
-        0 0 20px rgba(255,23,68,0.8);
-    animation: cyberRedPulse 1.8s infinite alternate;
+        0 0 3px rgba(255, 23, 68, 0.8),
+        0 0 7px rgba(255, 23, 68, 0.45);
+
+    animation: cyberRedGlow 8s infinite ease-in-out;
 }
 
+@keyframes cyberRedGlow {
 
-@keyframes cyberRedPulse {
-
-    0% {
+    0%,
+    50% {
         text-shadow:
-        0 0 3px #ff1744,
-        0 0 8px #ff1744;
+            0 0 3px rgba(255, 23, 68, 0.8),
+            0 0 7px rgba(255, 23, 68, 0.45);
+    }
+
+    65% {
+        text-shadow:
+            0 0 2px rgba(255, 23, 68, 0.35),
+            0 0 4px rgba(255, 23, 68, 0.2);
+    }
+
+    70%,
+    87% {
+        text-shadow: none;
     }
 
     100% {
         text-shadow:
-        0 0 8px #ff1744,
-        0 0 22px #ff1744,
-        0 0 35px rgba(255,23,68,.9);
+            0 0 3px rgba(255, 23, 68, 0.8),
+            0 0 7px rgba(255, 23, 68, 0.45);
     }
-
 }
         .status-good { color: var(--status-green); font-weight: 500; }
         .status-wait { color: var(--status-yellow); }
@@ -345,14 +395,14 @@ filter: none !important;
             font-weight: 600;
         }
         .graph-container {
-    height: 48px;
+    height: 55px;
     margin-top: auto;
     display: flex;
     align-items: flex-end;
     gap: 4px;
     padding: 0 2px 4px;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
        .graph-bar {
     flex: 1;
@@ -863,42 +913,48 @@ filter: none !important;
             position: absolute;
         }
 
-        .fetch-loading-text{
-            position:relative;
-            font-size:17px;
-            font-weight:600;
-            color:#94a3b8;
-            overflow:hidden;
-            white-space:nowrap;
-            text-shadow:none !important;
-            -webkit-text-stroke:0 !important;
-            filter:none !important;
-            letter-spacing: 0.2px;
-        }
-        .fetch-loading-text::before,
-.loading-text::before{
-            content: attr(data-text);
-            position:absolute;
-            left:0;
-            top:0;
-            width:100%;
-            height:100%;
-            color:transparent;
-            background:linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(255,255,255,0.9) 50%,
-                transparent 100%
-            );
-            background-size:300px 100%;
-            background-repeat:no-repeat;
-            -webkit-background-clip:text;
-            background-clip:text;
-            animation:sweep 2.5s linear infinite;
-            text-shadow:none !important;
-            -webkit-text-stroke:0 !important;
-            filter:none !important;
-        }
+       .fetch-loading-text{
+    position:relative;
+    font-size:17px;
+    font-weight:600;
+    color:#94a3b8;
+    overflow:hidden;
+    white-space:nowrap;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+    letter-spacing:.2px;
+}
+       .fetch-loading-text::before{
+    content:attr(data-text);
+    position:absolute;
+    inset:0;
+    color:transparent;
+
+    background:linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 15%,
+        rgba(255,255,255,.98) 50%,
+        transparent 85%,
+        transparent 100%
+    );
+
+    background-size:180px 100%;
+    background-repeat:no-repeat;
+    background-position:-180px 0;
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    animation:textLightSweep 1.9s linear infinite;
+
+    pointer-events:none;
+    text-shadow:none !important;
+    -webkit-text-stroke:0 !important;
+    filter:none !important;
+}
          
         .popup-overlay{
     position:fixed;
@@ -1804,11 +1860,8 @@ const elISP = document.getElementById('visitorISP');
         }
 
         const data = await res.json();
-
         deployedServers = data.deployed_servers || [];
-
         const currentHost = location.hostname;
-
         if (
             currentHost.includes('.run.app') &&
             !deployedServers.includes(currentHost)
@@ -1817,11 +1870,9 @@ const elISP = document.getElementById('visitorISP');
         }
 
         updateServerHostDropdown();
-
         addLog('Server list updated successfully.');
 
     } catch (error) {
-
         addLog('Failed to load server list.');
 
     }
@@ -1981,14 +2032,12 @@ const elISP = document.getElementById('visitorISP');
              
             fetchHostBtn.disabled = true;
             fetchHostBtn.textContent = 'FETCHING...';
-            fetchHostBtn.classList.add('active-glow');
-            
+            fetchHostBtn.classList.add('active-glow');          
             fetchOverlay.classList.remove('active', 'closing');
             void fetchOverlay.offsetWidth;
             fetchLoadingWrapper.classList.remove('hidden');
             successMsg.classList.remove('show');
             fetchOverlay.classList.add('active');
-
             await fetchAllServers();
 serverHostSelect.disabled = false;
 
