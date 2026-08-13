@@ -397,7 +397,7 @@ filter: none !important;
             font-weight: 600;
         }
         .graph-container {
-    height: 55px;
+    height: 75px;
     margin-top: auto;
     display: flex;
     align-items: flex-end;
@@ -1873,7 +1873,7 @@ setTimeout(() => {
             activityHistory.push(baseValue * (0.4 + Math.random() * 0.6));
             const maxValue = Math.max(...activityHistory, 1);
             graphBars.forEach((bar, idx) => {
-                bar.style.height = `${Math.max(3, (activityHistory[idx]/maxValue)*40)}px`;
+                bar.style.height = `${Math.max(3, (activityHistory[idx]/maxValue)*70)}px`;
             });
         }
         function updateLatencyStatus() {
