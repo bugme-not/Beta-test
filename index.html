@@ -1117,11 +1117,6 @@ filter: none !important;
     pointer-events:none;
     }
 
-/* =========================================================
-   UNIVERSAL DASHBOARD SCALE
-   One identical layout scaled as a complete unit.
-   ========================================================= */
-
 html,
 body {
     width: 100%;
@@ -1150,14 +1145,6 @@ body {
     box-sizing: border-box;
 }
 
-/*
- * This is the master design size.
- *
- * Everything inside this box keeps the same proportions.
- * The complete box is scaled by JavaScript to fit the
- * available phone/browser viewport.
- */
-
 .dashboard-scale {
     position: absolute;
 
@@ -1165,9 +1152,9 @@ body {
     height: 1016px;
 
     left: 50%;
-    top: 50%;
+    top: 0;
 
-    transform-origin: center center;
+    transform-origin: top center;
 
     display: flex;
     flex-direction: column;
@@ -1180,10 +1167,6 @@ body {
 
     overflow: hidden;
 }
-
-/* ---------------------------------------------------------
-   TOP SECTION
-   --------------------------------------------------------- */
 
 .dashboard-scale .top-container {
     width: 100%;
@@ -1207,10 +1190,6 @@ body {
     overflow: hidden;
 }
 
-/* ---------------------------------------------------------
-   MAIN PANEL
-   --------------------------------------------------------- */
-
 .dashboard-scale .glass-panel {
     width: 100%;
 
@@ -1230,10 +1209,6 @@ body {
     overflow: hidden;
 }
 
-/* ---------------------------------------------------------
-   KEEP ALL INTERNAL WIDTHS INSIDE THE MASTER CANVAS
-   --------------------------------------------------------- */
-
 .dashboard-scale .system-status-panel,
 .dashboard-scale .log-panel,
 .dashboard-scale .glass-panel,
@@ -1248,10 +1223,6 @@ body {
     min-width: 0;
     box-sizing: border-box;
 }
-
-/* ---------------------------------------------------------
-   PREVENT TEXT FROM CHANGING THE LAYOUT WIDTH
-   --------------------------------------------------------- */
 
 .dashboard-scale .status-value {
     min-width: 0;
@@ -1286,28 +1257,15 @@ body {
     max-width: 100%;
 }
 
-/* ---------------------------------------------------------
-   UNIFORM SCALING
-   --------------------------------------------------------- */
-
 @media (max-width: 768px) {
 
     .dashboard-scale {
-        /*
-         * JS supplies the actual scale.
-         * The CSS variable starts at 1 so the layout
-         * is valid before JavaScript calculates it.
-         */
         --dashboard-scale: 1;
 
         transform:
-            translate(-50%, -50%)
+            translateX(-50%)
             scale(var(--dashboard-scale));
 
-        /*
-         * Prevent browser text autosizing from changing
-         * the visual proportions.
-         */
         -webkit-text-size-adjust: none;
         text-size-adjust: none;
     }
@@ -1318,13 +1276,13 @@ body {
 
     .dashboard-scale {
         transform:
-            translate(-50%, -50%)
+            translateX(-50%)
             scale(var(--dashboard-scale, 1));
 
         -webkit-text-size-adjust: none;
         text-size-adjust: none;
     }
- }
+}
     </style>
 </head>
 <body>
@@ -1511,27 +1469,11 @@ function scaleDashboard() {
 
     const DESIGN_WIDTH = 540;
     const DESIGN_HEIGHT = 1016;
-
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-
-    /*
-     * Calculate the scale required to fit the COMPLETE
-     * dashboard inside the browser viewport.
-     */
-
     const scaleX = viewportWidth / DESIGN_WIDTH;
     const scaleY = viewportHeight / DESIGN_HEIGHT;
-
-    /*
-     * Always use the smaller value.
-     *
-     * This prevents either the left/right OR top/bottom
-     * of the dashboard from being cut.
-     */
-
     const scale = Math.min(scaleX, scaleY);
-
     dashboardScale.style.setProperty(
         '--dashboard-scale',
         scale
