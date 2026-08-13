@@ -44,8 +44,8 @@
         }
 
         html, body {
-    width: 100%;
-    height: 100%;
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
             color: var(--white);
             background-color: var(--bg-base);
@@ -83,11 +83,10 @@
             background: radial-gradient(circle at top left, #2a0845 0%, #0a0118 40%, #000000 100%);
         }
 
-        .container {
-    width: min(90%, 320px);
-    max-width: 320px;
-    min-width: 0;
-}
+        .container{
+            width:90%;
+            max-width:320px;
+        }
 
         .loading-text{
     position:relative;
@@ -1116,12 +1115,6 @@ filter: none !important;
     pointer-events:none;
     }
 
-/* =========================================================
-   UNIVERSAL PHONE LAYOUT
-   Fits the complete dashboard inside every phone viewport.
-   No horizontal clipping and no vertical clipping.
-   ========================================================= */
-
 @media (max-width: 768px) {
 
     html,
@@ -1130,10 +1123,7 @@ filter: none !important;
         height: 100%;
         min-width: 0;
         min-height: 0;
-        margin: 0;
-        padding: 0;
         overflow: hidden;
-        -webkit-text-size-adjust: 100%;
     }
 
     #page3 {
@@ -1141,61 +1131,26 @@ filter: none !important;
         inset: 0;
         width: 100%;
         height: 100%;
-        min-width: 0;
-        min-height: 0;
-        max-width: none;
-        max-height: none;
-
-        padding:
-            clamp(4px, 1vw, 8px);
-
-        gap:
-            clamp(4px, 1vw, 7px);
-
+        padding: 8px;
+        gap: 7px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: stretch;
-
+        align-items: center;
         overflow: hidden;
     }
 
-    /* =====================================================
-       TOP STATUS + EVENT LOG
-       ===================================================== */
-
     .top-container {
         width: 100%;
-        max-width: none;
-        min-width: 0;
-
-        /*
-         * Do not use a fixed/minimum height.
-         * The height automatically follows the available
-         * viewport height.
-         */
-        height: clamp(
-            150px,
-            31vh,
-            300px
-        );
-
-        min-height: 0;
-        max-height: 300px;
-
+        height: 29vh;
+        min-height: 170px;
+        max-height: 310px;
         margin: 0;
         padding: 0;
-
         display: grid;
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-
-        gap: clamp(4px, 1vw, 7px);
-
-        flex: 0 0 auto;
-
-        overflow: hidden;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 7px;
+        flex: none;
     }
 
     .system-status-panel,
@@ -1204,786 +1159,398 @@ filter: none !important;
         height: 100%;
         min-width: 0;
         min-height: 0;
-
-        overflow: hidden;
-
         border-radius: 10px;
+        overflow: hidden;
     }
 
+
     .system-status-panel {
-        padding:
-            clamp(7px, 1.5vw, 11px)
-            clamp(5px, 1.5vw, 9px)
-            clamp(5px, 1vw, 7px);
-
-        display: flex;
-        flex-direction: column;
-
-        min-width: 0;
+        padding: 11px 9px 7px;
     }
 
     .log-panel {
-        padding:
-            clamp(7px, 1.5vw, 11px)
-            clamp(5px, 1.5vw, 8px)
-            clamp(5px, 1vw, 7px);
-
-        display: flex;
-        flex-direction: column;
-
-        min-width: 0;
-        min-height: 0;
+        padding: 11px 8px 7px;
     }
 
-    /* =====================================================
-       STATUS TEXT
-       ===================================================== */
-
     .status-header {
-        font-size: clamp(
-            .58rem,
-            2.8vw,
-            .9rem
-        );
-
-        line-height: 1.1;
-
-        margin-bottom: clamp(3px, .8vh, 6px);
-
-        gap: 4px;
-
+        font-size: clamp(.68rem, 2.8vw, .9rem);
+        margin-bottom: 6px;
+        gap: 5px;
         white-space: nowrap;
-        min-width: 0;
     }
 
     .status-indicator {
-        width: clamp(6px, 1.8vw, 8px);
-        height: clamp(6px, 1.8vw, 8px);
-        flex: 0 0 auto;
+        width: 7px;
+        height: 7px;
+        flex: none;
     }
 
     .status-row {
-        width: 100%;
-        min-width: 0;
-
-        font-size: clamp(
-            .50rem,
-            2.45vw,
-            .82rem
-        );
-
-        line-height: 1.25;
-
-        margin:
-            clamp(1px, .35vh, 2px)
-            0;
-
-        display: flex;
-        align-items: center;
-
+        font-size: clamp(.62rem, 2.7vw, .82rem);
+        line-height: 1.35;
+        margin: 2px 0;
         gap: 3px;
-
-        /*
-         * Prevent long IP / ISP / city values from
-         * forcing the panel wider.
-         */
-        overflow: hidden;
-    }
-
-    .status-label {
-        flex: 0 0 auto;
         min-width: 0;
         white-space: nowrap;
     }
 
-    .status-value {
-        min-width: 0;
-        max-width: 100%;
-
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .network-monitor-label {
+        font-size: clamp(.52rem, 2vw, .68rem);
+        margin-top: 2px;
         white-space: nowrap;
-
-        font-size: inherit;
     }
-
-    /* =====================================================
-       PACKET GRAPH
-       ===================================================== */
 
     .graph-container {
-        width: 100%;
-
-        height: clamp(
-            30px,
-            7vh,
-            55px
-        );
-
-        min-height: 25px;
-
+        height: 42px;
         margin-top: auto;
-
-        gap: clamp(2px, .8vw, 4px);
-
-        padding:
-            0
-            2px
-            3px;
-
-        overflow: hidden;
+        gap: 3px;
+        padding: 0 2px 3px;
+        min-width: 0;
     }
 
     .graph-bar {
         min-width: 0;
         min-height: 2px;
-        max-height: 40px;
     }
-
-    .network-monitor-label {
-        width: 100%;
-
-        font-size: clamp(
-            .42rem,
-            1.9vw,
-            .68rem
-        );
-
-        line-height: 1;
-
-        margin-top: 2px;
-
-        text-align: center;
-
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
-    /* =====================================================
-       SERVER EVENT LOG
-       ===================================================== */
 
     .log-header {
-        width: 100%;
-
-        font-size: clamp(
-            .46rem,
-            2.1vw,
-            .75rem
-        );
-
-        line-height: 1.1;
-
-        margin-bottom: 2px;
-
+        font-size: clamp(.56rem, 2.4vw, .75rem);
+        margin-bottom: 3px;
         white-space: nowrap;
-        overflow: hidden;
-
-        text-align: center;
     }
 
     .log-divider {
-        width: 100%;
-        flex: 0 0 auto;
-
-        margin:
-            1px
-            0
-            3px;
+        margin: 1px 0 3px;
     }
 
     .log-content {
-        width: 100%;
         min-width: 0;
-        min-height: 0;
-
-        flex: 1 1 auto;
-
+        font-size: clamp(.52rem, 2.2vw, .7rem);
+        line-height: 1.25;
+        padding-right: 2px;
         overflow-x: hidden;
         overflow-y: auto;
-
-        padding-right: 2px;
-
-        font-size: clamp(
-            .40rem,
-            1.85vw,
-            .70rem
-        );
-
-        line-height: 1.2;
     }
 
     .log-entry {
-        width: 100%;
-        min-width: 0;
-
-        padding: 1px 0;
-        margin: 0;
-
-        text-align: left;
-
-        /*
-         * Keep the log inside its panel.
-         */
-        overflow-wrap: anywhere;
-        word-break: break-word;
+        white-space: nowrap;
     }
 
     .log-bottom {
-        width: 100%;
-        height: 18px;
-        min-height: 18px;
-
-        flex: 0 0 18px;
-
+        height: 19px;
         padding-top: 2px;
-
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-start;
     }
 
     .clear-log-btn {
-        padding: 2px 6px;
-
-        font-size: clamp(
-            6px,
-            1.7vw,
-            8px
-        );
+        padding: 3px 7px;
+        font-size: 8px;
     }
-
-    /* =====================================================
-       MAIN GLASS PANEL
-       ===================================================== */
 
     .glass-panel {
         width: 100%;
         max-width: none;
-        min-width: 0;
-        min-height: 0;
-
         margin: 0;
-
-        padding:
-            clamp(5px, 1.5vw, 9px)
-            clamp(5px, 1.5vw, 8px)
-            clamp(5px, 1.5vw, 9px);
-
+        padding: 9px 8px 9px;
         border-radius: 10px;
-
-        gap: clamp(2px, .8vw, 4px);
-
-        /*
-         * 
-         *
-         * viewport height.
-         */
-        flex: 1 1 0;
-
-        height: auto;
-
+        gap: 4px;
+        flex: 1 1 auto;
+        min-height: 0;
         overflow: hidden;
-
-        display: flex;
-        flex-direction: column;
     }
-
-    /* =====================================================
-       TITLE
-       ===================================================== */
 
     .page-title {
         width: 100%;
-        min-width: 0;
-
-        flex: 0 0 auto;
-
-        font-size: clamp(
-            .55rem,
-            3.2vw,
-            1.1rem
-        );
-
-        line-height: 1.15;
-
-        margin:
-            1px
-            0
-            3px;
-
-        text-align: center;
-
+        font-size: clamp(.72rem, 3.7vw, 1.1rem);
+        line-height: 1.2;
+        margin: 2px 0 4px;
         overflow: hidden;
     }
 
     .title-sweep {
-        display: block;
-
-        width: 100%;
         max-width: 100%;
-        min-width: 0;
-
         white-space: nowrap;
         overflow: hidden;
-
         text-overflow: clip;
     }
 
-    /* =====================================================
-       TRANSPORT / PROTOCOL BUTTONS
-       ===================================================== */
+    .protocol-row-top {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin: 2px 0;
+    }
 
-    .protocol-row-top,
     .protocol-row-bottom {
         width: 100%;
-        min-width: 0;
-
-        flex: 0 0 auto;
-
         display: grid;
-
-        gap: clamp(2px, .8vw, 4px);
-
-        margin:
-            1px
-            0;
-    }
-
-    .protocol-row-top {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-    }
-
-    .protocol-row-bottom {
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        margin: 2px 0;
     }
 
     .protocol-card {
         width: 100%;
         min-width: 0;
-
-        min-height: clamp(
-            32px,
-            6vh,
-            43px
-        );
-
-        height: auto;
-
-        padding:
-            4px
-            2px;
-
+        min-height: 43px;
+        padding: 6px 2px;
         border-radius: 6px;
-
-        font-size: clamp(
-            .45rem,
-            2.45vw,
-            .85rem
-        );
-
-        line-height: 1.05;
-
+        font-size: clamp(.58rem, 2.7vw, .85rem);
+        line-height: 1.1;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: clip;
         display: flex;
         align-items: center;
         justify-content: center;
-
-        text-align: center;
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: clip;
     }
-
-    /* =====================================================
-       DROPDOWNS
-       ===================================================== */
 
     .dropdown-group {
         width: 100%;
-        min-width: 0;
-
-        flex: 0 0 auto;
-
         display: grid;
-
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-
-        gap: clamp(3px, 1vw, 5px);
-
-        margin-bottom: 1px;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 5px;
+        margin-bottom: 2px;
     }
 
     .dropdown-container {
-        width: 100%;
         min-width: 0;
     }
 
     .dropdown-container label {
         display: block;
-
-        width: 100%;
-        min-width: 0;
-
-        font-size: clamp(
-            .43rem,
-            2.2vw,
-            .75rem
-        );
-
-        line-height: 1.05;
-
+        font-size: clamp(.55rem, 2.5vw, .75rem);
+        line-height: 1.1;
         margin-bottom: 2px;
-
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: clip;
     }
 
     select {
         width: 100%;
         min-width: 0;
-        max-width: 100%;
-
-        height: clamp(
-            28px,
-            5vh,
-            34px
-        );
-
-        padding:
-            3px
-            22px
-            3px
-            6px;
-
-        font-size: clamp(
-            .43rem,
-            2.15vw,
-            .75rem
-        );
-
+        height: 34px;
+        padding: 4px 24px 4px 6px;
         border-radius: 6px;
-
-        overflow: hidden;
+        font-size: clamp(.54rem, 2.4vw, .75rem);
+        background-position: right 6px center;
     }
-
-    /* =====================================================
-       SERVER HOST + FETCH
-       ===================================================== */
 
     .server-host-controls {
         width: 100%;
-        min-width: 0;
-
-        flex: 0 0 auto;
-
         display: grid;
-
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 34%);
-
-        gap: clamp(3px, 1vw, 5px);
-
-        margin-top: 3px;
-
-        align-items: stretch;
+        grid-template-columns: minmax(0, 1fr) minmax(92px, 34%);
+        gap: 5px;
+        margin-top: 4px;
+        min-width: 0;
     }
+
 
     #serverHostSelect {
         width: 100%;
         min-width: 0;
-        max-width: 100%;
-
-        height: clamp(
-            32px,
-            5.5vh,
-            38px
-        );
-
-        font-size: clamp(
-            .43rem,
-            2.15vw,
-            .75rem
-        );
-
-        padding:
-            3px
-            22px
-            3px
-            6px;
+        max-width: none;
+        height: 38px;
+        font-size: clamp(.54rem, 2.4vw, .75rem);
+        padding-left: 6px;
+        padding-right: 24px;
     }
 
     .fetch-btn {
         width: 100%;
         min-width: 0;
-        max-width: 100%;
-
-        height: clamp(
-            32px,
-            5.5vh,
-            38px
-        );
-
-        padding:
-            4px
-            3px;
-
-        font-size: clamp(
-            .45rem,
-            2.2vw,
-            .78rem
-        );
-
+        max-width: none;
+        height: 38px;
+        padding: 5px 4px;
+        font-size: clamp(.55rem, 2.5vw, .78rem);
         white-space: nowrap;
-
         overflow: hidden;
-        text-overflow: clip;
     }
-
-    /* =====================================================
-       CONFIG OUTPUT
-       ===================================================== */
 
     .config-box {
         width: 100%;
-        min-width: 0;
-
-        /*
-         * Flexible height instead of a fixed 100px.
-         */
-        height: clamp(
-            55px,
-            10vh,
-            100px
-        );
-
-        min-height: 50px;
-
-        flex: 0 1 auto;
-
-        margin:
-            2px
-            0;
-
-        padding: 6px;
-
-        font-size: clamp(
-            .43rem,
-            2.15vw,
-            .75rem
-        );
-
-        line-height: 1.25;
-
+        height: clamp(70px, 13vh, 105px);
+        min-height: 70px;
+        margin: 3px 0;
+        padding: 7px;
+        border-radius: 7px;
+        font-size: clamp(.56rem, 2.4vw, .75rem);
+        line-height: 1.3;
         overflow-x: hidden;
         overflow-y: auto;
-
         overflow-wrap: anywhere;
         word-break: break-word;
     }
 
-    /* =====================================================
-       COPY BUTTON
-       ===================================================== */
-
     .copy-btn {
         width: 100%;
-        min-width: 0;
-
-        height: clamp(
-            31px,
-            5.5vh,
-            37px
-        );
-
-        min-height: 31px;
-
-        flex: 0 0 auto;
-
+        height: 37px;
+        min-height: 37px;
         margin-top: 1px;
-
-        padding: 4px;
-
-        font-size: clamp(
-            .45rem,
-            2.2vw,
-            .8rem
-        );
-
+        padding: 5px;
         border-radius: 6px;
+        font-size: clamp(.58rem, 2.5vw, .8rem);
     }
-
-    /* =====================================================
-       QUOTE
-       ===================================================== */
 
     .quote-section {
         width: 100%;
-        min-width: 0;
-
-        flex: 1 1 auto;
-
-        min-height: 0;
-
-        padding:
-            3px
-            4px
-            0;
-
+        padding: 4px 5px 0;
         margin-top: 1px;
-
-        text-align: center;
-
         overflow: hidden;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
     }
 
     .quote-main {
-        width: 100%;
-
-        font-size: clamp(
-            .58rem,
-            3.3vw,
-            1.15rem
-        );
-
-        line-height: 1.1;
-
+        font-size: clamp(.75rem, 4vw, 1.15rem);
+        line-height: 1.15;
         margin-bottom: 1px;
-
-        white-space: nowrap;
-        overflow: hidden;
     }
 
     .quote-phonetic {
-        width: 100%;
-
-        font-size: clamp(
-            .43rem,
-            2vw,
-            .75rem
-        );
-
-        line-height: 1.05;
-
+        font-size: clamp(.55rem, 2.4vw, .75rem);
+        line-height: 1.1;
         margin-bottom: 1px;
-
-        white-space: nowrap;
-        overflow: hidden;
     }
 
     .quote-desc {
         width: 100%;
+        font-size: clamp(.52rem, 2.2vw, .7rem);
+        line-height: 1.25;
         max-width: 100%;
-
-        font-size: clamp(
-            .40rem,
-            1.9vw,
-            .70rem
-        );
-
-        line-height: 1.2;
-
-        margin: 0 auto;
-
-        overflow: hidden;
     }
 }
 
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 360px) {
+@media (max-width: 380px) {
 
     #page3 {
-        padding: 4px;
-        gap: 4px;
+        padding: 5px;
+        gap: 5px;
     }
 
     .top-container {
-        height: 29vh;
-        max-height: 250px;
+        height: 27vh;
+        min-height: 150px;
+    }
+
+    .system-status-panel {
+        padding: 8px 6px 5px;
+    }
+
+    .log-panel {
+        padding: 8px 6px 5px;
     }
 
     .status-header {
-        font-size: .55rem;
+        font-size: .61rem;
+        margin-bottom: 4px;
     }
 
     .status-row {
-        font-size: .48rem;
+        font-size: .56rem;
+        margin: 1px 0;
+    }
+
+    .graph-container {
+        height: 34px;
+        gap: 2px;
     }
 
     .network-monitor-label {
-        font-size: .40rem;
+        font-size: .46rem;
     }
 
     .log-header {
-        font-size: .42rem;
+        font-size: .51rem;
     }
 
     .log-content {
-        font-size: .38rem;
+        font-size: .47rem;
+    }
+
+    .clear-log-btn {
+        padding: 2px 5px;
+        font-size: 7px;
+    }
+
+    .glass-panel {
+        padding: 7px 6px 7px;
+        gap: 3px;
     }
 
     .page-title {
-        font-size: .50rem;
+        font-size: .65rem;
+        margin: 1px 0 3px;
     }
 
+    .protocol-row-top,
+    .protocol-row-bottom {
+        gap: 3px;
+        margin: 1px 0;
+    }
+
+
     .protocol-card {
-        min-height: 30px;
-        font-size: .40rem;
+        min-height: 38px;
+        padding: 4px 1px;
+        font-size: .52rem;
+    }
+
+    .dropdown-group {
+        gap: 3px;
     }
 
     .dropdown-container label {
-        font-size: .40rem;
+        font-size: .49rem;
+
+        margin-bottom: 1px;
     }
 
-    select,
-    #serverHostSelect {
-        height: 27px;
-        font-size: .39rem;
+    select {
+        height: 30px;
+        font-size: .48rem;
+        padding: 3px 20px 3px 5px;
     }
 
+    .server-host-controls {
+        grid-template-columns: minmax(0, 1fr) minmax(80px, 34%);
+        gap: 3px;
+    }
+
+    #serverHostSelect,
     .fetch-btn {
-        height: 27px;
-        font-size: .40rem;
+        height: 34px;
+        font-size: .49rem;
     }
+
 
     .config-box {
-        height: 52px;
-        min-height: 48px;
-        font-size: .39rem;
+        height: 65px;
+        min-height: 65px;
+        padding: 5px;
+        font-size: .49rem;
     }
+
 
     .copy-btn {
-        height: 29px;
-        min-height: 29px;
-        font-size: .40rem;
+        height: 33px;
+        min-height: 33px;
+        font-size: .5rem;
     }
+
 
     .quote-main {
-        font-size: .55rem;
+        font-size: .7rem;
     }
+
 
     .quote-phonetic {
-        font-size: .40rem;
+        font-size: .48rem;
     }
+
 
     .quote-desc {
-        font-size: .37rem;
+        font-size: .45rem;
+        line-height: 1.15;
     }
-
 .system-status-panel {
     position:relative;
     overflow:hidden;
@@ -2293,11 +1860,8 @@ const elISP = document.getElementById('visitorISP');
         }
 
         const data = await res.json();
-
         deployedServers = data.deployed_servers || [];
-
         const currentHost = location.hostname;
-
         if (
             currentHost.includes('.run.app') &&
             !deployedServers.includes(currentHost)
@@ -2306,11 +1870,9 @@ const elISP = document.getElementById('visitorISP');
         }
 
         updateServerHostDropdown();
-
         addLog('Server list updated successfully.');
 
     } catch (error) {
-
         addLog('Failed to load server list.');
 
     }
@@ -2470,14 +2032,12 @@ const elISP = document.getElementById('visitorISP');
              
             fetchHostBtn.disabled = true;
             fetchHostBtn.textContent = 'FETCHING...';
-            fetchHostBtn.classList.add('active-glow');
-            
+            fetchHostBtn.classList.add('active-glow');          
             fetchOverlay.classList.remove('active', 'closing');
             void fetchOverlay.offsetWidth;
             fetchLoadingWrapper.classList.remove('hidden');
             successMsg.classList.remove('show');
             fetchOverlay.classList.add('active');
-
             await fetchAllServers();
 serverHostSelect.disabled = false;
 
