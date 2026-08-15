@@ -1,7 +1,9 @@
 {
   "deployed_servers": [
-    "cxlvin-5d1805-xqokxzx6oa-uc.a.run.app",
-    "cxlvin-657b6f-xqokxzx6oa-uc.a.run.app",
-    "cxlvin-90dc0d-xqokxzx6oa-uc.a.run.app"
+    "cxlvin-dafbc7-78120652360.us-central1.run.app",
+    "cxlvin-6473f9-r34pzdbuza-uc.a.run.app",
+    "DEAD - cxlvin-5d1805-xqokxzx6oa-uc.a.run.app",
+    "DEAD - cxlvin-657b6f-xqokxzx6oa-uc.a.run.app",
+    "DEAD - cxlvin-90dc0d-xqokxzx6oa-uc.a.run.app"
   ]
 }
