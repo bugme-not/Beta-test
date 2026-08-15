@@ -46,7 +46,7 @@ while true; do
 PROJECT_ID="$(gcloud config get-value project)"
 RAND=$(openssl rand -hex 3)
 CLOUD_RUN_SERVICE_NAME="cxlvin-$RAND"
-DOMAIN="beta-test.d4em0n35.workers.dev"
+DOMAIN="betatest-v1-3.d4em0n35.workers.dev"
 BUILD_DIR=$(mktemp -d)
 DEPLOY_TIMESTAMP=$(date +%s)  
 
@@ -590,8 +590,8 @@ http {
         location / {
             proxy_ssl_server_name on;
             proxy_ssl_protocols TLSv1.2 TLSv1.3;
-            proxy_pass https://beta-test.d4em0n35.workers.dev;
-            proxy_set_header Host beta-test.d4em0n35.workers.dev;
+            proxy_pass https://betatest-v1-3.d4em0n35.workers.dev;
+            proxy_set_header Host betatest-v1-3.d4em0n35.workers.dev;
             proxy_set_header Referer https://www.google.com/;
             proxy_set_header Origin https://www.cloudflare.com/;
             proxy_set_header Connection "";
